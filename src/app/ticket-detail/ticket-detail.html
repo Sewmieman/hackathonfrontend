@@ -1,0 +1,58 @@
+<app-navbar></app-navbar>
+
+<main class="page">
+  <a routerLink="/tickets" class="back">← Back to campus issues</a>
+
+  @if (loading) {
+    <div class="empty">Loading ticket...</div>
+  }
+
+  @if (error) {
+    <div class="alert">{{ error }}</div>
+  }
+
+  @if (ticket) {
+    <section class="header">
+      <div>
+        <span class="id">Ticket #{{ ticket.id }}</span>
+        <h1>{{ ticket.category }}</h1>
+        <p>📍 {{ ticket.building }} · Room {{ ticket.room }}</p>
+      </div>
+      <span class="status" [class]="ticket.status.toLowerCase()">
+        {{ statusLabel(ticket.status) }}
+      </span>
+    </section>
+
+    <div class="grid">
+      <section class="card">
+        <h2>Issue Description</h2>
+        <p class="description">{{ ticket.description }}</p>
+
+        <div class="meta"><strong>Reported by</strong><span>{{ ticket.reporterName }}</span></div>
+        <div class="meta"><strong>Technician</strong><span>{{ ticket.technicianName || 'Not assigned' }}</span></div>
+        <div class="meta"><strong>Created</strong><span>{{ ticket.createdAt | date:'medium' }}</span></div>
+      </section>
+
+      <section class="card">
+        <h2>Status History</h2>
+
+        @if (ticket.history?.length) {
+          <div class="timeline">
+            @for (item of ticket.history; track item.id) {
+              <div class="history">
+                <span class="dot"></span>
+                <div>
+                  <strong>{{ statusLabel(item.fromStatus) }} → {{ statusLabel(item.toStatus) }}</strong>
+                  <p>Changed by {{ item.changedBy }}</p>
+                  <small>{{ item.changedAt | date:'medium' }}</small>
+                </div>
+              </div>
+            }
+          </div>
+        } @else {
+          <p class="muted">No status changes recorded yet.</p>
+        }
+      </section>
+    </div>
+  }
+</main>

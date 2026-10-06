@@ -1,0 +1,17 @@
+<header class="navbar">
+  <a class="logo" routerLink="/dashboard">🏫 FixMyCampus</a>
+
+  <nav>
+    <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+    <a routerLink="/tickets" routerLinkActive="active">Campus Issues</a>
+    <a routerLink="/tickets/create" routerLinkActive="active">Report Issue</a>
+    <a routerLink="/my-tickets" routerLinkActive="active">My Tickets</a>
+
+    @if (auth.isAdmin()) {
+      <a routerLink="/admin" routerLinkActive="active">Admin</a>
+    }
+
+    <span class="user">{{ auth.getFullName() }} · {{ auth.getRole() }}</span>
+    <button (click)="logout()">Logout</button>
+  </nav>
+</header>

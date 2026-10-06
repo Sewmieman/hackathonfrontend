@@ -1,0 +1,40 @@
+<app-navbar></app-navbar>
+
+<main class="dashboard">
+  <section class="hero">
+    <div>
+      <span class="badge">Campus Maintenance</span>
+      <h1>Welcome, {{ auth.getFullName() }}</h1>
+      <p>Report campus problems and track every issue from New to Resolved.</p>
+    </div>
+    <a class="primary" routerLink="/tickets/create">+ Report an Issue</a>
+  </section>
+
+  <section class="cards">
+    <a class="card" routerLink="/tickets">
+      <span>📋</span>
+      <h3>Campus Issues</h3>
+      <p>Browse the campus issue feed and filter by building or status.</p>
+    </a>
+
+    <a class="card" routerLink="/tickets/create">
+      <span>🛠️</span>
+      <h3>Report an Issue</h3>
+      <p>Create a ticket with category, building, room and description.</p>
+    </a>
+
+    <a class="card" routerLink="/my-tickets">
+      <span>🎫</span>
+      <h3>My Tickets</h3>
+      <p>See tickets reported with your full name.</p>
+    </a>
+
+    @if (auth.isAdmin()) {
+      <a class="card admin" routerLink="/admin">
+        <span>⚙️</span>
+        <h3>Admin Dashboard</h3>
+        <p>Assign technicians and move tickets through the fixed lifecycle.</p>
+      </a>
+    }
+  </section>
+</main>

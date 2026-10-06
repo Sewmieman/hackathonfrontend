@@ -1,0 +1,73 @@
+<app-navbar></app-navbar>
+
+<main class="page">
+  <div class="heading">
+    <div>
+      <span class="eyebrow">Campus Feed</span>
+      <h1>Reported Issues</h1>
+      <p>See current campus issues and their progress.</p>
+    </div>
+    <a routerLink="/tickets/create" class="primary">+ Report Issue</a>
+  </div>
+
+  <section class="filters">
+    <input [(ngModel)]="building" placeholder="Filter by building">
+
+    <select [(ngModel)]="status">
+      <option value="">All statuses</option>
+      @for (item of statuses; track item) {
+        <option [value]="item">{{ statusLabel(item) }}</option>
+      }
+    </select>
+
+    <button (click)="loadTickets()">Apply Filters</button>
+  </section>
+
+  @if (error) {
+    <div class="alert">{{ error }}</div>
+  }
+
+  @if (loading) {
+    <div class="empty">Loading tickets...</div>
+  } @else {
+    <section class="tickets">
+      @for (ticket of tickets; track ticket.id) {
+        <article class="ticket-card">
+          <div class="ticket-top">
+            <span class="ticket-id">#{{ ticket.id }}</span>
+            <span class="status" [class]="ticket.status.toLowerCase()">
+              {{ statusLabel(ticket.status) }}
+            </span>
+          </div>
+
+          <h2>{{ ticket.category }}</h2>
+
+          <p class="location">
+            📍 {{ ticket.building }} · Room {{ ticket.room }}
+          </p>
+
+          <p class="description">{{ ticket.description }}</p>
+
+          <div class="meta">
+            <span>Reported by {{ ticket.reporterName }}</span>
+            <span>{{ ticket.createdAt | date:'mediumDate' }}</span>
+          </div>
+
+          @if (ticket.technicianName) {
+            <div class="technician">Technician: {{ ticket.technicianName }}</div>
+          }
+
+          <a [routerLink]="['/tickets', ticket.id]" class="details">
+            View details →
+          </a>
+        </article>
+      } @empty {
+        <div class="empty">
+          <div class="empty-icon">🎫</div>
+          <h3>No tickets found</h3>
+          <p>Try another filter or report a new issue.</p>
+        </div>
+      }
+    </section>
+  }
+</main>

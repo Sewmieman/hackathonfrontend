@@ -1,0 +1,39 @@
+<app-navbar></app-navbar>
+
+<main class="page">
+  <div class="heading">
+    <div>
+      <span class="eyebrow">Reporter</span>
+      <h1>My Tickets</h1>
+      <p>Tickets reported with your full name.</p>
+    </div>
+    <a routerLink="/tickets/create" class="primary">+ Report Issue</a>
+  </div>
+
+  @if (loading) {
+    <div class="empty">Loading your tickets...</div>
+  } @else if (error) {
+    <div class="alert">{{ error }}</div>
+  } @else {
+    <section class="list">
+      @for (ticket of tickets; track ticket.id) {
+        <article class="item">
+          <div>
+            <span class="id">#{{ ticket.id }}</span>
+            <h3>{{ ticket.category }}</h3>
+            <p>{{ ticket.building }} · Room {{ ticket.room }}</p>
+          </div>
+          <span class="status" [class]="ticket.status.toLowerCase()">
+            {{ statusLabel(ticket.status) }}
+          </span>
+          <a [routerLink]="['/tickets', ticket.id]">View →</a>
+        </article>
+      } @empty {
+        <div class="empty">
+          <h3>You have not reported any tickets yet.</h3>
+          <a routerLink="/tickets/create">Report your first issue</a>
+        </div>
+      }
+    </section>
+  }
+</main>

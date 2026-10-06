@@ -1,0 +1,78 @@
+<app-navbar></app-navbar>
+
+<main class="page">
+  <a routerLink="/tickets" class="back">← Back to campus issues</a>
+
+  <section class="form-card">
+    <div class="heading">
+      <span class="eyebrow">New Ticket</span>
+      <h1>Report a Campus Issue</h1>
+      <p>Give the maintenance team enough information to locate the problem.</p>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="grid">
+        <div class="field">
+          <label for="category">Category</label>
+          <select id="category" formControlName="category">
+            <option value="">Select category</option>
+            @for (item of categories; track item) {
+              <option [value]="item">{{ item }}</option>
+            }
+          </select>
+          @if (form.controls.category.touched && form.controls.category.invalid) {
+            <small>Category is required.</small>
+          }
+        </div>
+
+        <div class="field">
+          <label for="building">Building</label>
+          <select id="building" formControlName="building">
+            <option value="">Select building</option>
+            @for (item of buildings; track item) {
+              <option [value]="item">{{ item }}</option>
+            }
+          </select>
+          @if (form.controls.building.touched && form.controls.building.invalid) {
+            <small>Building is required.</small>
+          }
+        </div>
+
+        <div class="field">
+          <label for="room">Room</label>
+          <input id="room" formControlName="room" placeholder="e.g. Lab 101">
+          @if (form.controls.room.touched && form.controls.room.invalid) {
+            <small>Room is required.</small>
+          }
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="description">Description</label>
+        <textarea
+          id="description"
+          rows="6"
+          formControlName="description"
+          placeholder="Describe the issue, what is affected, and any useful details..."></textarea>
+
+        <div class="counter">{{ form.controls.description.value.length }} characters</div>
+
+        @if (form.controls.description.touched && form.controls.description.invalid) {
+          <small>Description must contain at least 10 characters.</small>
+        }
+      </div>
+
+      @if (error) {
+        <div class="alert error">{{ error }}</div>
+      }
+
+      @if (success) {
+        <div class="alert success">{{ success }}</div>
+      }
+
+      <button class="submit-btn" type="submit" [disabled]="loading">
+        {{ loading ? 'Submitting...' : 'Submit Ticket' }}
+      </button>
+    </form>
+  </section>
+</main>

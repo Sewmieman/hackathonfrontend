@@ -1,0 +1,68 @@
+<app-navbar></app-navbar>
+
+<main class="page">
+  <div class="heading">
+    <div>
+      <span class="eyebrow">Administration</span>
+      <h1>Ticket Management</h1>
+      <p>Assign technicians and move tickets through the required lifecycle.</p>
+    </div>
+  </div>
+
+  <section class="filters">
+    <input [(ngModel)]="building" placeholder="Building">
+    <select [(ngModel)]="status">
+      <option value="">All statuses</option>
+      @for (item of statuses; track item) {
+        <option [value]="item">{{ statusLabel(item) }}</option>
+      }
+    </select>
+    <button (click)="loadTickets()">Filter</button>
+  </section>
+
+  @if (error) {
+    <div class="alert">{{ error }}</div>
+  }
+
+  @if (loading) {
+    <div class="empty">Loading...</div>
+  } @else {
+    <section class="rows">
+      @for (ticket of tickets; track ticket.id) {
+        <article class="row">
+          <div class="main">
+            <span class="id">#{{ ticket.id }}</span>
+            <div>
+              <h3>{{ ticket.category }}</h3>
+              <p>{{ ticket.building }} · Room {{ ticket.room }}</p>
+              <small>{{ ticket.description }}</small>
+            </div>
+          </div>
+
+          <span class="status" [class]="ticket.status.toLowerCase()">
+            {{ statusLabel(ticket.status) }}
+          </span>
+
+          <div class="actions">
+            @if (ticket.status === 'New') {
+              <input
+                [(ngModel)]="technicianNames[ticket.id]"
+                placeholder="Technician name">
+              <button class="assign" (click)="assign(ticket)">Assign</button>
+            }
+
+            @if (ticket.status === 'Assigned' || ticket.status === 'InProgress') {
+              <button class="next" (click)="moveNext(ticket)">
+                {{ nextLabel(ticket.status) }}
+              </button>
+            }
+
+            <a [routerLink]="['/tickets', ticket.id]">View</a>
+          </div>
+        </article>
+      } @empty {
+        <div class="empty">No tickets match the selected filters.</div>
+      }
+    </section>
+  }
+</main>
